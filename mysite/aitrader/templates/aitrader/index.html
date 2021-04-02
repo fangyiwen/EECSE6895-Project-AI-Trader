@@ -1,0 +1,20 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A-share Stock AI Trader</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<div style="text-align:center;">
+    <h1>A-share Stock AI Trader</h1>
+    <form>
+        <button formaction="/aitrader/select_stock/">Begin!</button>
+    </form>
+</div>
+</body>
+</html>

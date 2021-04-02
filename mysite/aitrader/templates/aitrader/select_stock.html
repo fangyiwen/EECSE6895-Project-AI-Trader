@@ -1,0 +1,33 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select a Stock</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<div style="text-align:center;">
+    <h1>Select a Stock</h1>
+    <hr/>
+
+    <table rules="all" style="text-align:center;border:1px solid black;margin-left:auto;margin-right:auto;">
+        <tr>
+            <th>Stock Symbol</th>
+            <th>Company</th>
+            <th>Click to Trade</th>
+        </tr>
+        {% for tickerObj in sticker_obj_list %}
+            <tr>
+                <td>{{ tickerObj.ticker }}</td>
+                <td>{{ tickerObj.longName }}</td>
+                <td><a href="/aitrader/trade_stock_lstm/{{ tickerObj.ticker }}/">Select</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trade Run</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<div style="text-align:center;">
+    <h1>{{ stock_id }} {{ longName }}</h1>
+
+    <hr/>
+
+    <h2>Board</h2>
+    <li>Initial Balance (CNY): ¥{{ initial_balance }}</li>
+    <li>Estimated Profit after One Week (CNY): ¥{{ week_profit }}</li>
+    <li>Estimated Balance after One Week (CNY): ¥{{ balance }}</li>
+
+    <h2>Trading Strategy</h2>
+    <table rules="all" style="text-align:center;border:1px solid black;margin-left:auto;margin-right:auto;">
+        <tr>
+            <th>Number of Day</th>
+            <th>Operation</th>
+            <th>Date</th>
+        </tr>
+        {% for key, value in date_operations_dict.items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ value }}</td>
+                <td>{{ key }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Stock Price Prediction</h2>
+
+    {% load static %}
+    {% for figure in figure_list %}
+        <p>
+            <img src="{% static '/' %}lstm/{{ stock_id_number_only }}/figure/{{ figure }}" alt="My image">
+        </p>
+    {% endfor %}
+</div>
+</body>
+</html>

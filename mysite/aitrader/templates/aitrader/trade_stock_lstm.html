@@ -1,0 +1,28 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trade Stock</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<div style="text-align:center;">
+    <h1>{{ stock_id }}</h1>
+    <h1>{{ longName }}</h1>
+
+    <form action="/aitrader/trade_stock_lstm/{{ stock_id }}/" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="initial_balance">Initial Balance (CNY):</label>
+            <input type="text" name="initial_balance" id="initial_balance" required>
+        </div>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>
