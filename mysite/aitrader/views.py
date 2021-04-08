@@ -7,6 +7,11 @@ from aitrader.myfolder.lstm.trade import maxProfit as maxProfit_lstm
 import os
 import datetime
 from aitrader.myfolder.svm.trade import maxProfit as maxProfit_svm
+from aitrader.myfolder.lstm.lstm_model import run_lstm_model
+from aitrader.myfolder.code.data_download import data_download
+import threading
+import urllib.request as request
+
 
 # Create your views here.
 
@@ -66,6 +71,7 @@ def trade_stock_svm(request, stock_id):
 
         return HttpResponseRedirect(url)
 
+
 def trade_run_lstm(request, stock_id, initial_balance):
     stock_id_number_only = stock_id[:-3]
     tmp = maxProfit_lstm(stock_id_number_only, int(initial_balance))
@@ -79,10 +85,15 @@ def trade_run_lstm(request, stock_id, initial_balance):
             figure_list.append(file)
     figure_list.sort(key=lambda x: int(x[3:-4]))
 
-    date_list = []
-    for i in range(len(operations)):
-        date = findComingMonday() + datetime.timedelta(days=i)
-        date_list.append(date.strftime('%Y-%m-%d'))
+    n = len(operations)
+
+    path = "./aitrader/myfolder/lstm/" + stock_id + "_latest_date.txt"
+    f = open(path, "r")
+    latest_date = f.read()
+    latest_date = datetime.datetime.strptime(latest_date, '%Y-%m-%d')
+    f.close()
+
+    date_list = findComingTradingDay(latest_date, n)
 
     date_operations_dict = {date_list[i]: operations[i] for i in
                             range(len(operations))}
@@ -127,8 +138,64 @@ def trade_run_svm(request, stock_id):
                }
     return render(request, 'aitrader/trade_run_svm.html', context)
 
+
+def train_lstm(request, stock_id):
+    threading.Thread(target=train_lstm_helper, args=(stock_id, 'lstm')).start()
+    context = {'stock_id': stock_id,
+               'longName': get_quote_data(stock_id)['longName']}
+
+    return render(request, 'aitrader/train_lstm.html', context)
+
+
 # Helper
 def findComingMonday():
     today = datetime.date.today()
     coming_monday = today + datetime.timedelta(days=-today.weekday(), weeks=1)
     return coming_monday
+
+
+def findComingTradingDay(latest_date, n):
+    date_list = []
+    mydate = latest_date + datetime.timedelta(days=1)
+    for i in range(n):
+        while not stock_is_trade_date(mydate.strftime('%Y-%m-%d')):
+            mydate += datetime.timedelta(days=1)
+        date_list.append(mydate.strftime('%Y-%m-%d'))
+        mydate = mydate + datetime.timedelta(days=1)
+    return date_list
+
+
+def stock_get_date_type(query_date):
+    """
+    :param query_date: 2020-10-01
+    :return 0: weekday，1: weekend，2: holiday，-1: error
+    """
+    url = 'http://tool.bitefu.net/jiari/?d=' + query_date
+    resp = request.urlopen(url, timeout=3)
+    content = resp.read()
+    if content:
+        try:
+            day_type = int(content)
+        except ValueError:
+            return -1
+        else:
+            return day_type
+
+    return -1
+
+
+def stock_is_trade_date(query_date):
+    """
+    :param query_date: 2020-10-01
+    :return: 1: yes，0: no
+    """
+    weekday = datetime.datetime.strptime(query_date, '%Y-%m-%d').isoweekday()
+    if weekday <= 5 and stock_get_date_type(query_date) == 0:
+        return True
+    else:
+        return False
+
+
+def train_lstm_helper(stock_id, model):
+    data_download(stock_id, model)
+    run_lstm_model(stock_id[:-3])

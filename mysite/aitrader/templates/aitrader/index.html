@@ -1,5 +1,6 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style_index.css' %}">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,9 +13,64 @@
 
 <div style="text-align:center;">
     <h1>A-share Stock AI Trader</h1>
-    <form>
-        <button formaction="/aitrader/select_stock/">Begin!</button>
-    </form>
+    <a href="/aitrader/select_stock/" class="myButton">Begin!</a>
 </div>
+
+<br>
+<br>
+
+<div style="text-align:center;">
+    <table style="margin-left: auto; margin-right: auto;">
+        <tr style="text-align:center; color:#FB667A;">
+            <td>Shanghai Stock Exchange (SSE)</td>
+            <td>Shenzhen Stock Exchange (SZSE)</td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    if (typeof (stockdio_events) == "undefined") {
+                        stockdio_events = true;
+                        var stockdio_eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                        var stockdio_eventer = window[stockdio_eventMethod];
+                        var stockdio_messageEvent = stockdio_eventMethod == "attachEvent" ? "onmessage" : "message";
+                        stockdio_eventer(stockdio_messageEvent, function (e) {
+                            if (typeof (e.data) != "undefined" && typeof (e.data.method) != "undefined") {
+                                eval(e.data.method);
+                            }
+                        }, false);
+                    }
+                </script>
+                <iframe id='st_2a540190234c4cb58116665924dd5f8f' frameBorder='0' scrolling='no' width='400'
+                        height='100%'
+                        src='https://api.stockdio.com/visualization/financial/charts/v1/MarketOverviewChart?app-key=13AB9F24D45845B686E7F1CAC4C0A260&stockExchange=SSE&indices=SSE&dividends=true&splits=true&palette=Financial-Light&title=Market%20Overview&onload=st_2a540190234c4cb58116665924dd5f8f'></iframe>
+            </td>
+            <td>
+                <script>
+                    if (typeof (stockdio_events) == "undefined") {
+                        stockdio_events = true;
+                        var stockdio_eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                        var stockdio_eventer = window[stockdio_eventMethod];
+                        var stockdio_messageEvent = stockdio_eventMethod == "attachEvent" ? "onmessage" : "message";
+                        stockdio_eventer(stockdio_messageEvent, function (e) {
+                            if (typeof (e.data) != "undefined" && typeof (e.data.method) != "undefined") {
+                                eval(e.data.method);
+                            }
+                        }, false);
+                    }
+                </script>
+                <iframe id='st_fbb0896fd97944f4979763e6297cfffc' frameBorder='0' scrolling='no' width='400'
+                        height='100%'
+                        src='https://api.stockdio.com/visualization/financial/charts/v1/MarketOverviewChart?app-key=13AB9F24D45845B686E7F1CAC4C0A260&stockExchange=SZSE&indices=SZSE&dividends=true&splits=true&palette=Financial-Light&title=Market%20Overview&onload=st_fbb0896fd97944f4979763e6297cfffc'></iframe>
+            </td>
+        </tr>
+    </table>
+
+
+    <br>
+    <br>
+
+
+</div>
+
 </body>
 </html>

@@ -1,10 +1,11 @@
 # coding:utf-8
 import csv
 
+root_path = "./aitrader/myfolder/lstm/"
 
 def maxProfit(stockcode, balance):
     # prediction_result=str(stockcode)+'//solution//prediction_result.txt'
-    prediction_result = './aitrader/myfolder/lstm/' + str(stockcode) + '/solution/prediction_result.txt'
+    prediction_result = root_path + str(stockcode) + '/solution/prediction_result.txt'
     f=open(prediction_result, encoding="utf-8")
     text = f.read()
     prices=text.strip().split(" ")
@@ -35,7 +36,7 @@ def maxProfit(stockcode, balance):
     
     list=[["day1", "day2", "day3", "day4", "day5"],prices,operations]
     # solution_path=str(stockcode)+'/solution/solution.csv'
-    solution_path = './aitrader/myfolder/lstm/' + str(stockcode) + '/solution/solution.csv'
+    solution_path = root_path + str(stockcode) + '/solution/solution.csv'
     f = open(solution_path,'w',newline='')
     writer = csv.writer(f)
     for i in list:
@@ -43,6 +44,3 @@ def maxProfit(stockcode, balance):
     f.close()
 
     return operations, week_profit, balance+week_profit
-
-
-

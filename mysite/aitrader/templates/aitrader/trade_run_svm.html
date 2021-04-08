@@ -1,5 +1,6 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style_trade_run_svm.css' %}">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,30 +11,33 @@
 <body>
 {% include 'aitrader/navbar.html' %}
 
+<h1><span class="blue">&lt;</span>SVM Trading<span class="blue">&gt;</span> <span class="yellow">{{ longName }}</span>
+</h1>
+<h2>{{ stock_id }}</h2>
+
 <div style="text-align:center;">
-    <h1>{{ stock_id }} {{ longName }}</h1>
+    <h1>Trading Strategy</h1>
 
-    <hr/>
-
-    <h2>Board</h2>
-
-    <h2>Trading Strategy</h2>
-    <table rules="all" style="text-align:center;border:1px solid black;margin-left:auto;margin-right:auto;">
+    <table class="container">
+        <thead>
         <tr>
-            <th>Number of Day</th>
-            <th>Operation</th>
-            <th>Date</th>
+            <th><h1>Number of Day</h1></th>
+            <th><h1>Operation</h1></th>
+            <th><h1>Date</h1></th>
         </tr>
+        </thead>
+        <tbody style="text-align: center;">
         {% for key, value in date_operations_dict.items %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ value }}</td>
+                <td style="color: #FB667A;">{{ value }}</td>
                 <td>{{ key }}</td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 
-    <h2>Stock Price Prediction</h2>
+    <h1>Stock Price Prediction</h1>
 
     {% load static %}
     {% for figure in figure_list %}

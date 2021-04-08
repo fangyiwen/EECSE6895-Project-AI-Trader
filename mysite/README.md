@@ -10,6 +10,11 @@ Yiwen Fang (yf2560) | Guoshiwen Han (gh2567)
 - Django=3.1.7
 - pip install yahoo-fin
 - pip install django-bootstrap4
+- pip install matplotlib
+- pip install tensorflow
+- pip install numpy
+- pip install pandas
+- pip install yahoo-fin
 
 ## Command
 - python manage.py runserver

@@ -1,0 +1,29 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style_train_lstm.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train LSTM</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<h1><span class="blue">&lt;</span>Train LSTM<span class="blue">&gt;</span> <span class="yellow">{{ longName }}</span>
+</h1>
+<h2>{{ stock_id }}</h2>
+
+<div style="text-align:center;">
+    <form action="/aitrader/trade_stock_svm/{{ stock_id }}/" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Submit" class="myButton">
+    </form>
+</div>
+
+<br>
+<br>
+
+</body>
+</html>
