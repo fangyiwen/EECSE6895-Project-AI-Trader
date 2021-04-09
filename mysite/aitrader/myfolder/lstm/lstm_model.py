@@ -13,7 +13,7 @@ import json
 
 root_path = "./aitrader/myfolder/lstm/"
 # number_of_iterations = 200
-number_of_iterations = 5
+number_of_iterations = 200
 
 def run_lstm_model(stockcode):
     def LSTMtest(data):

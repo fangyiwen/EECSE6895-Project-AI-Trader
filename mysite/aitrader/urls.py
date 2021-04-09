@@ -18,6 +18,8 @@ urlpatterns = [
                   path('trade_run_svm/<str:stock_id>/',
                        views.trade_run_svm, name='trade_run_svm'),
                   path('train_lstm/<str:stock_id>/',
-                       views.train_lstm, name='train_lstm')
+                       views.train_lstm, name='train_lstm'),
+                  path('train_svm/<str:stock_id>/',
+                       views.train_svm, name='train_svm')
               ] + static(settings.STATIC_URL,
                          document_root=settings.STATIC_ROOT)
