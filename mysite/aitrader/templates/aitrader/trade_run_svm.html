@@ -16,35 +16,164 @@
 <h2>{{ stock_id }}</h2>
 
 <div style="text-align:center;">
+    <hr/>
+
     <h1>Trading Strategy</h1>
 
-    <table class="container">
-        <thead>
+    <div style="text-align:center;">
+        <script>
+            if (typeof (stockdio_events) == "undefined") {
+                stockdio_events = true;
+                var stockdio_eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                var stockdio_eventer = window[stockdio_eventMethod];
+                var stockdio_messageEvent = stockdio_eventMethod == "attachEvent" ? "onmessage" : "message";
+                stockdio_eventer(stockdio_messageEvent, function (e) {
+                    if (typeof (e.data) != "undefined" && typeof (e.data.method) != "undefined") {
+                        eval(e.data.method);
+                    }
+                }, false);
+            }
+        </script>
+        <iframe id='st_3f77635a498f407ba6a86ce9ac72465b' frameBorder='0' scrolling='no' width='100%' height='100%'
+                src='https://api.stockdio.com/visualization/financial/charts/v1/Ticker?app-key=13AB9F24D45845B686E7F1CAC4C0A260&stockExchange=SSE&symbols={{ stock_id }}&palette=High-Contrast&backgroundColor=1f2739&onload=st_3f77635a498f407ba6a86ce9ac72465b'></iframe>
+    </div>
+
+    <table style="width:100%">
         <tr>
-            <th><h1>Number of Day</h1></th>
-            <th><h1>Operation</h1></th>
-            <th><h1>Date</h1></th>
+            <td style="width:50%">
+                <table class="container">
+                    <thead>
+                    <tr>
+                        <th><h1>Number of Day</h1></th>
+                        <th><h1>Operation</h1></th>
+                        <th><h1>Date</h1></th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% for key, value in date_operations_dict.items %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            {% if value == 'buy' %}
+                                <td style="color: #47A851;">BUY</td>
+                            {% elif value == 'sell' %}
+                                <td style="color: #FB667A;">SELL</td>
+                            {% else %}
+                                <td style="color: #FFF842;">HOLD</td>
+                            {% endif %}
+                            <td>{{ key }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </td>
+            <td style="width:50%">
+                <div id="future5days" style="width: 640px;height:480px;margin-left: auto;margin-right: auto;"></div>
+            </td>
         </tr>
-        </thead>
-        <tbody style="text-align: center;">
-        {% for key, value in date_operations_dict.items %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td style="color: #FB667A;">{{ value }}</td>
-                <td>{{ key }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
     </table>
-
-    <h1>Stock Price Prediction</h1>
-
-    {% load static %}
-    {% for figure in figure_list %}
-        <p>
-            <img src="{% static '/' %}svm/{{ stock_id_number_only }}/figure/{{ figure }}" alt="My image">
-        </p>
-    {% endfor %}
 </div>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.2/echarts.min.js"></script>
+<script>
+    {# future5days #}
+    date_operations_dict = {{ date_operations_dict|safe }};
+    date_operations_list = [];
+    for (let key in date_operations_dict) {
+        date_operations_list.push(date_operations_dict[key])
+    }
+
+    future5days = {{ future5days|safe }};
+    for (let i = 0; i < future5days.length; i++) {
+        if (date_operations_list[i] === 'buy') {
+            future5days[i] = {
+                value: future5days[i],
+                itemStyle: {
+                    color: '#47A851',
+                    name: 'buy'
+                }
+            }
+        } else if (date_operations_list[i] === 'sell') {
+            future5days[i] = {
+                value: future5days[i],
+                itemStyle: {
+                    color: '#FB667A',
+                    name: 'sell'
+                }
+            }
+        } else {
+            future5days[i] = {
+                value: future5days[i],
+                itemStyle: {
+                    color: '#FFF842',
+                    name: 'hold'
+                }
+            }
+        }
+    }
+
+    x_future5days = [];
+    for (let i = 0; i < future5days.length; i++) {
+        x_future5days.push(i + 1)
+    }
+
+    var myChartTwo = echarts.init(document.getElementById('future5days'));
+    optionTwo = {
+        xAxis: [
+            {
+                type: 'category',
+                data: x_future5days,
+                axisLabel: {},
+                name: 'Days',
+                nameLocation: 'center',
+                nameGap: 30
+            }
+        ],
+        yAxis: {
+            type: 'value',
+            min: -1,
+            max: 1,
+            interval: 1,
+            name: 'Increase/decrease',
+            nameLocation: 'center',
+            nameGap: 50,
+            axisLabel: {
+                formatter: function (value) {
+                    if (value === 1) {
+                        return "Increase"
+                    } else if (value === -1) {
+                        return "Decrease"
+                    }
+                    return 0;
+                }
+            },
+            splitLine: {
+                show: false
+            },
+            axisLine: {
+                show: true
+            }
+        },
+        series: [
+            {
+                data: future5days,
+                type: 'bar',
+                label: {
+                    show: true,
+                    position: 'inside',
+                    formatter: function (d) {
+                        return future5days[parseInt(d.name) - 1]['itemStyle']['name'].toUpperCase();
+                    }
+                }
+            }
+        ],
+        title: {
+            text: 'Prediction of Future 5 Days',
+            left: 'center',
+            textStyle: {color: '#4DC3FA'}
+        }
+    };
+
+    optionTwo && myChartTwo.setOption(optionTwo);
+</script>
 </html>

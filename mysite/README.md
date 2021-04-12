@@ -16,6 +16,7 @@ Yiwen Fang (yf2560) | Guoshiwen Han (gh2567)
 - pip install pandas
 - pip install yahoo-fin
 - pip install scikit-learn
+- pip install statsmodels
 
 ## Command
 - python manage.py runserver

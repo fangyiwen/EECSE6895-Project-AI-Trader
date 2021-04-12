@@ -11,7 +11,8 @@
 <body>
 {% include 'aitrader/navbar.html' %}
 
-<h1><span class="blue">&lt;</span>LSTM Trading<span class="blue">&gt;</span> <span class="yellow">{{ longName }}</span></h1>
+<h1><span class="blue">&lt;</span>LSTM Trading<span class="blue">&gt;</span> <span class="yellow">{{ longName }}</span>
+</h1>
 <h2>{{ stock_id }}</h2>
 
 <div style="text-align:center;">
@@ -22,6 +23,9 @@
             <input type="text" name="initial_balance" id="initial_balance" required>
         </div>
         <br>
+        <label style="color:white;">(At least 100 shares)</label>
+        <br>
+        <br>
         <input type="submit" value="Submit" class="myButton">
     </form>
 </div>
@@ -31,27 +35,7 @@
 
 <div style="text-align:center;">
     <iframe frameBorder='0' scrolling='no' width='800' height='420'
-            src='https://api.stockdio.com/visualization/financial/charts/v1/HistoricalPrices?app-key=13AB9F24D45845B686E7F1CAC4C0A260&symbol={{ stock_id }}&dividends=true&splits=true&palette=Financial-Light&showLogo=Title'></iframe>
-
-    <br>
-    <br>
-
-    <script>
-        if (typeof (stockdio_events) == "undefined") {
-            stockdio_events = true;
-            var stockdio_eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-            var stockdio_eventer = window[stockdio_eventMethod];
-            var stockdio_messageEvent = stockdio_eventMethod == "attachEvent" ? "onmessage" : "message";
-            stockdio_eventer(stockdio_messageEvent, function (e) {
-                if (typeof (e.data) != "undefined" && typeof (e.data.method) != "undefined") {
-                    eval(e.data.method);
-                }
-            }, false);
-        }
-    </script>
-    <iframe id='st_756c7af29d9f468ca757e978d60c4371' frameBorder='0' scrolling='no' width='100%' height='100%'
-            src='https://api.stockdio.com/visualization/financial/charts/v1/OfficersDirectors?app-key=13AB9F24D45845B686E7F1CAC4C0A260&symbol={{ stock_id }}&palette=Financial-Light&title=Officers%20and%20Directors&onload=st_756c7af29d9f468ca757e978d60c4371'></iframe>
-
+            src='https://api.stockdio.com/visualization/financial/charts/v1/HistoricalPrices?app-key=13AB9F24D45845B686E7F1CAC4C0A260&symbol={{ stock_id }}&dividends=true&splits=true&showLastPrice=false&palette=High-Contrast&showLogo=Title&backgroundColor=1f2739'></iframe>
 </div>
 
 </body>

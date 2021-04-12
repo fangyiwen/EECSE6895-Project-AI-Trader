@@ -1,0 +1,166 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style_train_stock.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Training</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<h1><span class="blue">&lt;</span>Stock List<span class="blue">&gt;</span>
+    <img src="../../static/files/train.svg" style="width:40px;height:40px;"/>
+    <span class="yellow">Training</span></h1>
+
+<div style="text-align:center;">
+    <div>
+        <label style="color:#4DC3FA;">Add Stock Symbol:</label>
+        <input type="text" id="add_stock_symbol">
+    </div>
+    <br>
+    <label style="color:white;">(Example: 600519.SS)</label>
+    <br>
+    <label style="color:#FB667A;" id="show_info"></label>
+    <br>
+    <br>
+    <input type="submit" value="Add" class="myButton" onclick="addButtonClick()">
+</div>
+
+<table class="container" id="myTable">
+    <thead>
+    <tr>
+        <th><h1>Stock Symbol</h1></th>
+        <th><h1>Company</h1></th>
+        <th><h1>LSTM</h1></th>
+        <th><h1>SVM</h1></th>
+        <th><h1>ARIMA</h1></th>
+        <th><h1>Integration (All)</h1></th>
+        <th><h1>Last Update</h1></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for tickerObj in sticker_obj_list %}
+        <tr>
+            <td>{{ tickerObj.ticker }}</td>
+            <td>{{ tickerObj.longName }}</td>
+            <td style="text-align:center;" id="lstm_{{ tickerObj.ticker }}"><a
+                    href="javascript:void(0);"
+                    style="color:#FB667A;" onclick="lstmClick('{{ tickerObj.ticker }}')">LSTM</a></td>
+            <td style="text-align:center;" id="svm_{{ tickerObj.ticker }}"><a
+                    href="javascript:void(0);" style="color:#FB667A;"
+                    onclick="svmClick('{{ tickerObj.ticker }}')">SVM</a>
+            </td>
+            <td style="text-align:center;" id="arima_{{ tickerObj.ticker }}"><a
+                    href="javascript:void(0);"
+                    style="color:#FB667A;" onclick="arimaClick('{{ tickerObj.ticker }}')">ARIMA</a>
+            </td>
+            <td style="text-align:center;" id="integration_{{ tickerObj.ticker }}"><a
+                    href="javascript:void(0);"
+                    style="color:#FB667A;" onclick="integrationClick('{{ tickerObj.ticker }}')">Integration</a>
+            </td>
+            <td>{{ tickerObj.latest_date }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+
+<script>
+    function integrationClick(ticker) {
+        var x = new XMLHttpRequest();
+        var y = new XMLHttpRequest();
+        var z = new XMLHttpRequest();
+
+        x.open("GET", "../train_lstm/" + ticker + "/", true);
+        x.send();
+
+        y.open("GET", "../train_svm/" + ticker + "/", true);
+        y.send();
+
+        z.open("GET", "../train_arima/" + ticker + "/", true);
+        z.send();
+
+        document.getElementById("integration_" + ticker).innerHTML = "<span style='color: #47A851;'>In process ...</span>";
+    }
+
+    function lstmClick(ticker) {
+        var x = new XMLHttpRequest();
+        x.open("GET", "../train_lstm/" + ticker + "/", true);
+        x.send();
+        document.getElementById("lstm_" + ticker).innerHTML = "<span style='color: #47A851;'>In process ...</span>";
+    }
+
+    function svmClick(ticker) {
+        var x = new XMLHttpRequest();
+        x.open("GET", "../train_svm/" + ticker + "/", true);
+        x.send();
+        document.getElementById("svm_" + ticker).innerHTML = "<span style='color: #47A851;'>In process ...</span>";
+    }
+
+    function arimaClick(ticker) {
+        var x = new XMLHttpRequest();
+        x.open("GET", "../train_arima/" + ticker + "/", true);
+        x.send();
+        document.getElementById("arima_" + ticker).innerHTML = "<span style='color: #47A851;'>In process ...</span>";
+    }
+
+    function addButtonClick() {
+        var stock_symbol = document.getElementById("add_stock_symbol").value;
+        fetch('../../static/files/A-shares Main Board.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                if (stock_symbol in myJson) {
+                    sticker_obj_list = {{ sticker_obj_list|safe }};
+                    exist = false;
+                    for (var sticker_obj in sticker_obj_list) {
+                        if (sticker_obj.ticker === stock_symbol) {
+                            exist = true;
+                            break;
+                        }
+                    }
+
+                    if (exist) {
+                        document.getElementById('show_info').innerHTML = stock_symbol + " is already existed!";
+                        return;
+                    }
+
+                    var myTable = document.getElementById('myTable');
+                    var row = myTable.insertRow(1);
+                    row.innerHTML = "<td>" + stock_symbol + "</td>"
+
+                        + "<td>-</td>"
+
+                        + "            <td style=\"text-align:center;\" id=\"lstm_" + stock_symbol + "\"><a\n" +
+                        "                    href=\"javascript:void(0);\"\n" +
+                        "                    style=\"color:#FB667A;\" onclick=\"lstmClick('" + stock_symbol + "')\">LSTM</a></td>"
+
+                        + "            <td style=\"text-align:center;\" id=\"svm_" + stock_symbol + "\"><a\n" +
+                        "                    href=\"javascript:void(0);\" style=\"color:#FB667A;\"\n" +
+                        "                    onclick=\"svmClick('" + stock_symbol + "')\">SVM</a>\n" +
+                        "            </td>"
+
+                        + "            <td style=\"text-align:center;\" id=\"arima_" + stock_symbol + "\"><a\n" +
+                        "                    href=\"javascript:void(0);\"\n" +
+                        "                    style=\"color:#FB667A;\" onclick=\"arimaClick('" + stock_symbol + "')\">ARIMA</a>\n" +
+                        "            </td>"
+
+                        + "            <td style=\"text-align:center;\" id=\"integration_" + stock_symbol + "\"><a\n" +
+                        "                    href=\"javascript:void(0);\" \n" +
+                        "                    style=\"color:#FB667A;\" onclick=\"integrationClick('" + stock_symbol + "')\">Integration</a>\n" +
+                        "            </td>";
+
+                    document.getElementById('show_info').innerHTML = stock_symbol + " is added!";
+                    integrationClick(stock_symbol)
+                } else {
+                    document.getElementById('show_info').innerHTML = "Invalid stock symbol!";
+                }
+            });
+    }
+</script>
+</html>

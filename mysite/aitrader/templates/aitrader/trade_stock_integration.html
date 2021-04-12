@@ -1,0 +1,35 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'aitrader/style_trade_stock_integration.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trade Stock</title>
+</head>
+<body>
+{% include 'aitrader/navbar.html' %}
+
+<h1><span class="blue">&lt;</span>Integration Trading<span class="blue">&gt;</span> <span
+        class="yellow">{{ longName }}</span>
+</h1>
+<h2>{{ stock_id }}</h2>
+
+<div style="text-align:center;">
+    <form action="/aitrader/trade_stock_integration/{{ stock_id }}/" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Submit" class="myButton">
+    </form>
+</div>
+
+<br>
+<br>
+
+<div style="text-align:center;">
+    <iframe frameBorder='0' scrolling='no' width='800' height='420'
+            src='https://api.stockdio.com/visualization/financial/charts/v1/HistoricalPrices?app-key=13AB9F24D45845B686E7F1CAC4C0A260&symbol={{ stock_id }}&dividends=true&splits=true&showLastPrice=false&palette=High-Contrast&showLogo=Title&backgroundColor=1f2739'></iframe>
+</div>
+
+</body>
+</html>

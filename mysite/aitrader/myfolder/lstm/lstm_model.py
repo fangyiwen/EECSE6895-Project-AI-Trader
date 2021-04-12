@@ -13,7 +13,7 @@ import json
 
 root_path = "./aitrader/myfolder/lstm/"
 # number_of_iterations = 200
-number_of_iterations = 200
+number_of_iterations = 5
 
 def run_lstm_model(stockcode):
     def LSTMtest(data):
@@ -260,7 +260,7 @@ def run_lstm_model(stockcode):
                 loss_path = root_path + str(
                     stockcode) + "//datapoint//" + 'loss' + ".json"
 
-                jsObj = json.dumps({'test_predict': test_predict.tolist(), 'test_y': test_y.tolist()})
+                jsObj = json.dumps({'test_predict': test_predict.tolist(), 'test_y': test_y[:-day].tolist()})
                 fileObject = open(time_path, 'w')
                 fileObject.write(jsObj)
                 fileObject.close()
@@ -324,4 +324,11 @@ def run_lstm_model(stockcode):
         os.makedirs(root_path + str(stockcode) + '//solution')
     with open(root_path + str(stockcode) + '//solution//prediction_result.txt', 'w') as f:
         for item in prediction_result:
-            f.write(str(item) + " ")
+            f.write(str(item) + "\t")
+
+        if prediction_result[0] > original['close'][len(original)-1]:
+            f.write("\n" + "1")
+        elif prediction_result[0] == original['close'][len(original) - 1]:
+            f.write("\n" + "0")
+        elif prediction_result[0] < original['close'][len(original)-1]:
+            f.write("\n" + "-1")

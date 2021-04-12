@@ -7,8 +7,8 @@ def maxProfit(stockcode, balance):
     # prediction_result=str(stockcode)+'//solution//prediction_result.txt'
     prediction_result = root_path + str(stockcode) + '/solution/prediction_result.txt'
     f=open(prediction_result, encoding="utf-8")
-    text = f.read()
-    prices=text.strip().split(" ")
+    lines = f.readlines()
+    prices = lines[0].strip().split("\t")
     print(prices)
     operations=["hold"]*len(prices)
     
