@@ -242,7 +242,7 @@
                     show: true,
                     position: 'inside',
                     formatter: function (d) {
-                        return "(" + Math.round(future5days[parseInt(d.name) - 1]['value']) + ")\n\n" + future5days[parseInt(d.name) - 1]['itemStyle']['name'].toUpperCase();
+                        return "(" + (future5days[parseInt(d.name) - 1]['value']).toFixed(2) + ")\n\n" + future5days[parseInt(d.name) - 1]['itemStyle']['name'].toUpperCase();
                     }
                 }
             }

@@ -107,7 +107,7 @@ def train_ARIMA_model(stockcode):
     future5days_path = root_path + str(
         stockcode) + "//datapoint//" + 'future5days' + ".json"
 
-    jsObj = json.dumps([int(x) for x in prediction_result])
+    jsObj = json.dumps([float(x) for x in prediction_result])
     fileObject = open(future5days_path, 'w')
     fileObject.write(jsObj)
     fileObject.close()

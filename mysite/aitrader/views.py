@@ -344,13 +344,13 @@ def trade_run_integration(request, stock_id):
     date_operations_dict = {date_list[i]: operations[i] for i in
                             range(len(operations))}
 
-    date_operations_dict_lstm = {date_list[i]: operations[i] for i in
+    date_operations_dict_lstm = {date_list[i]: operations_lstm[i] for i in
                                  range(len(operations_lstm))}
 
-    date_operations_dict_svm = {date_list[i]: operations[i] for i in
+    date_operations_dict_svm = {date_list[i]: operations_svm[i] for i in
                                 range(len(operations_svm))}
 
-    date_operations_dict_arima = {date_list[i]: operations[i] for i in
+    date_operations_dict_arima = {date_list[i]: operations_arima[i] for i in
                                   range(len(operations_arima))}
 
     future5days_lstm = []
