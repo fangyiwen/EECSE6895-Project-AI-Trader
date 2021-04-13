@@ -43,26 +43,35 @@ def select_stock(request):
 
     path = "./aitrader/myfolder/lstm"
     files = os.listdir(path)
-    ticker_set = set()
+    ticker_set_lstm = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_lstm.add(file[:9])
 
     path = "./aitrader/myfolder/svm"
     files = os.listdir(path)
+    ticker_set_svm = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            if file[:9] in ticker_set:
-                ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_svm.add(file[:9])
 
     path = "./aitrader/myfolder/arima"
     files = os.listdir(path)
+    ticker_set_arima = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            if file[:9] in ticker_set:
-                ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_arima.add(file[:9])
 
-    ticker_list = ticker_set
+    ticker_list = ticker_set_lstm & ticker_set_svm & ticker_set_arima
 
     sticker_obj_list = []
     for ticker in ticker_list:
@@ -93,26 +102,35 @@ def train_stock(request):
 
     path = "./aitrader/myfolder/lstm"
     files = os.listdir(path)
-    ticker_set = set()
+    ticker_set_lstm = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_lstm.add(file[:9])
 
     path = "./aitrader/myfolder/svm"
     files = os.listdir(path)
+    ticker_set_svm = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            if file[:9] in ticker_set:
-                ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_svm.add(file[:9])
 
     path = "./aitrader/myfolder/arima"
     files = os.listdir(path)
+    ticker_set_arima = set()
     for file in files:
         if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
-            if file[:9] in ticker_set:
-                ticker_set.add(file[:9])
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_arima.add(file[:9])
 
-    ticker_list = ticker_set
+    ticker_list = ticker_set_lstm & ticker_set_svm & ticker_set_arima
 
     sticker_obj_list = []
     for ticker in ticker_list:
