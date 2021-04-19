@@ -34,6 +34,8 @@ urlpatterns = [
                   path('train_svm/<str:stock_id>/',
                        views.train_svm, name='train_svm'),
                   path('train_arima/<str:stock_id>/',
-                       views.train_arima, name='train_arima')
+                       views.train_arima, name='train_arima'),
+                  path('stock_all/',
+                       views.stock_all, name='stock_all')
               ] + static(settings.STATIC_URL,
                          document_root=settings.STATIC_ROOT)

@@ -19,6 +19,7 @@ from aitrader.myfolder.arima.ARIMA_model import train_ARIMA_model
 import threading
 import urllib.request as request
 import json
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -426,6 +427,45 @@ def train_arima(request, stock_id):
                'longName': get_quote_data(stock_id)['longName']}
 
     return render(request, 'aitrader/train_arima.html', context)
+
+
+def stock_all(request):
+    path = "./aitrader/myfolder/lstm"
+    files = os.listdir(path)
+    ticker_set_lstm = set()
+    for file in files:
+        if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_lstm.add(file[:9])
+
+    path = "./aitrader/myfolder/svm"
+    files = os.listdir(path)
+    ticker_set_svm = set()
+    for file in files:
+        if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_svm.add(file[:9])
+
+    path = "./aitrader/myfolder/arima"
+    files = os.listdir(path)
+    ticker_set_arima = set()
+    for file in files:
+        if file[6:] == ".SS.csv" or file[6:] == ".SZ.csv":
+            if os.path.exists(
+                    path + "/" + file[:-7] + "/solution/prediction_result.txt"):
+                # SVM may fail to generate models
+                ticker_set_arima.add(file[:9])
+
+    ticker_list = ticker_set_lstm & ticker_set_svm & ticker_set_arima
+
+    data = {
+        'ticker_list': list(ticker_list)
+    }
+    return JsonResponse(data)
 
 
 # Helper
