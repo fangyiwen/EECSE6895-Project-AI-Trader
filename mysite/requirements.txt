@@ -1,0 +1,10 @@
+Django==3.1.7
+yahoo-fin
+django-bootstrap4
+matplotlib
+grpcio==1.27.2
+tensorflow
+numpy
+pandas
+scikit-learn
+statsmodels

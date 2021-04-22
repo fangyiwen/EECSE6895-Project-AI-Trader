@@ -1,11 +1,12 @@
 # coding:utf-8
 import csv
 
-root_path = "./aitrader/myfolder/svm/"
-
 
 def maxProfit(stockcode):
-    prediction_result = root_path + str(stockcode) + '//solution//prediction_result.txt'
+    root_path = "./aitrader/myfolder/svm/"
+
+    prediction_result = root_path + str(
+        stockcode) + '//solution//prediction_result.txt'
     f = open(prediction_result, encoding="utf-8")
     text = f.read()
     trends = text.strip().split("\t")

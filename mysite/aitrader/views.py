@@ -72,7 +72,7 @@ def select_stock(request):
                 # SVM may fail to generate models
                 ticker_set_arima.add(file[:9])
 
-    ticker_list = ticker_set_lstm & ticker_set_svm & ticker_set_arima
+    ticker_list = ticker_set_lstm | ticker_set_svm | ticker_set_arima
 
     sticker_obj_list = []
     for ticker in ticker_list:
@@ -82,6 +82,19 @@ def select_stock(request):
         latest_date = f.read()
         f.close()
         tmp['latest_date'] = latest_date
+
+        if ticker in ticker_set_lstm:
+            tmp['lstm'] = True
+        else:
+            tmp['lstm'] = False
+        if ticker in ticker_set_svm:
+            tmp['svm'] = True
+        else:
+            tmp['svm'] = False
+        if ticker in ticker_set_arima:
+            tmp['arima'] = True
+        else:
+            tmp['arima'] = False
         sticker_obj_list.append(tmp)
 
     context = {'sticker_obj_list': sticker_obj_list}
@@ -131,7 +144,7 @@ def train_stock(request):
                 # SVM may fail to generate models
                 ticker_set_arima.add(file[:9])
 
-    ticker_list = ticker_set_lstm & ticker_set_svm & ticker_set_arima
+    ticker_list = ticker_set_lstm | ticker_set_svm | ticker_set_arima
 
     sticker_obj_list = []
     for ticker in ticker_list:
@@ -199,7 +212,7 @@ def trade_stock_integration(request, stock_id):
 
 def trade_run_lstm(request, stock_id, initial_balance):
     stock_id_number_only = stock_id[:-3]
-    tmp = maxProfit_lstm(stock_id_number_only, int(initial_balance))
+    tmp = maxProfit_lstm(stock_id_number_only, float(initial_balance))
     operations, week_profit, balance = tmp
 
     path = "./aitrader/myfolder/lstm/" + stock_id_number_only + "/figure"
@@ -294,7 +307,7 @@ def trade_run_svm(request, stock_id):
 
 def trade_run_arima(request, stock_id, initial_balance):
     stock_id_number_only = stock_id[:-3]
-    tmp = maxProfit_arima(stock_id_number_only, int(initial_balance))
+    tmp = maxProfit_arima(stock_id_number_only, float(initial_balance))
     operations, week_profit, balance = tmp
 
     path = "./aitrader/myfolder/arima/" + stock_id_number_only + "/figure"

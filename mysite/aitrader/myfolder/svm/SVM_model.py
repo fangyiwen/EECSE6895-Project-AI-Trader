@@ -13,17 +13,20 @@ from sklearn import svm
 import os
 import json
 
-root_path = "./aitrader/myfolder/svm/"
 
+def train_SVM_model(stockcode, invoke_from_http=True):
+    root_path = "./aitrader/myfolder/svm/"
 
-def train_SVM_model(stockcode):
+    if not invoke_from_http:
+        root_path = "../mysite/aitrader/myfolder/svm/"
+
     # initialization
     prediction_result = []
 
     # mk dir
-    isExists = os.path.exists(root_path + str(stockcode) + '//solution')
+    isExists = os.path.exists(root_path + str(stockcode) + '/solution')
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + '//solution')
+        os.makedirs(root_path + str(stockcode) + '/solution')
 
     # Data processing
     data_path = root_path + str(stockcode) + ".SS.csv"
@@ -78,7 +81,7 @@ def train_SVM_model(stockcode):
         flag = 0
         SampleSize = 30
         print("SampleSize: ", SampleSize)
-        print("There will be %d loops." % min(train // SampleSize,
+        print("There will be %d loops." % min(train / SampleSize,
                                               total_predict_data))
 
         while i + SampleSize < train & train < L:
@@ -115,14 +118,14 @@ def train_SVM_model(stockcode):
 
         prediction_result.append(classifier.predict(DATA_lastday_prediction))
 
-    with open(root_path + str(stockcode) + '//solution//prediction_result.txt',
+    with open(root_path + str(stockcode) + '/solution/prediction_result.txt',
               'w') as f:
         for item in prediction_result:
             f.write(str(item)[1:-1] + "0\t")
 
-    isExists = os.path.exists(root_path + str(stockcode) + "//figure")
+    isExists = os.path.exists(root_path + str(stockcode) + "/figure")
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + "//figure")
+        os.makedirs(root_path + str(stockcode) + "/figure")
 
     plt.figure()
     plt.plot(list(range(len(prediction_result))), prediction_result,
@@ -130,17 +133,17 @@ def train_SVM_model(stockcode):
     plt.xlabel('days', fontsize=14)
     plt.ylabel('close value', fontsize=14)
     plt.title('future 5 days ' + ' 1:rise, -1:fall', fontsize=15)
-    figurepath_5days = root_path + str(stockcode) + "//figure//future5days.jpg"
+    figurepath_5days = root_path + str(stockcode) + "/figure/future5days.jpg"
     plt.savefig(figurepath_5days)
     plt.show()
 
     # Save datapoint
     isExists = os.path.exists(
-        root_path + str(stockcode) + "//datapoint")
+        root_path + str(stockcode) + "/datapoint")
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + "//datapoint")
+        os.makedirs(root_path + str(stockcode) + "/datapoint")
     future5days_path = root_path + str(
-        stockcode) + "//datapoint//" + 'future5days' + ".json"
+        stockcode) + "/datapoint/" + 'future5days' + ".json"
 
     jsObj = json.dumps([float(x) for x in prediction_result])
     fileObject = open(future5days_path, 'w')

@@ -9,10 +9,13 @@ import numpy as np
 import os
 import json
 
-root_path = "./aitrader/myfolder/arima/"
 
+def train_ARIMA_model(stockcode, invoke_from_http=True):
+    root_path = "./aitrader/myfolder/arima/"
 
-def train_ARIMA_model(stockcode):
+    if not invoke_from_http:
+        root_path = "../mysite/aitrader/myfolder/arima/"
+
     # ==============load data===============
     data_path = root_path + str(stockcode) + ".SS.csv"
     # data_path="./"+str(600519)+".SS.csv"
@@ -64,12 +67,12 @@ def train_ARIMA_model(stockcode):
     predict_data = arima.forecast(5)
     print(str(predict_data[0]))
 
-    isExists = os.path.exists(root_path + str(stockcode) + '//solution')
+    isExists = os.path.exists(root_path + str(stockcode) + '/solution')
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + '//solution')
+        os.makedirs(root_path + str(stockcode) + '/solution')
 
     prediction_result = []
-    with open(root_path + str(stockcode) + '//solution//prediction_result.txt',
+    with open(root_path + str(stockcode) + '/solution/prediction_result.txt',
               'w') as f:
         for item in str(predict_data[0])[1:-1].replace("  ", " ").split(" "):
             print(item)
@@ -85,9 +88,9 @@ def train_ARIMA_model(stockcode):
 
     print(prediction_result)
 
-    isExists = os.path.exists(root_path + str(stockcode) + "//figure")
+    isExists = os.path.exists(root_path + str(stockcode) + "/figure")
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + "//figure")
+        os.makedirs(root_path + str(stockcode) + "/figure")
 
     plt.figure()
     plt.plot(list(range(len(prediction_result))), prediction_result,
@@ -95,17 +98,17 @@ def train_ARIMA_model(stockcode):
     plt.xlabel('days', fontsize=14)
     plt.ylabel('close value', fontsize=14)
     plt.title('future 5 days', fontsize=15)
-    figurepath_5days = root_path + str(stockcode) + "//figure//future5days.jpg"
+    figurepath_5days = root_path + str(stockcode) + "/figure/future5days.jpg"
     plt.savefig(figurepath_5days)
     plt.show()
 
     # Save datapoint
     isExists = os.path.exists(
-        root_path + str(stockcode) + "//datapoint")
+        root_path + str(stockcode) + "/datapoint")
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + "//datapoint")
+        os.makedirs(root_path + str(stockcode) + "/datapoint")
     future5days_path = root_path + str(
-        stockcode) + "//datapoint//" + 'future5days' + ".json"
+        stockcode) + "/datapoint/" + 'future5days' + ".json"
 
     jsObj = json.dumps([float(x) for x in prediction_result])
     fileObject = open(future5days_path, 'w')

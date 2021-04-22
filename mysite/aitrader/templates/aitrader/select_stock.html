@@ -29,19 +29,35 @@
     </thead>
     <tbody>
     {% for tickerObj in sticker_obj_list %}
-        <tr>
-            <td>{{ tickerObj.ticker }}</td>
-            <td>{{ tickerObj.longName }}</td>
-            <td style="text-align:center;"><a href="/aitrader/trade_stock_lstm/{{ tickerObj.ticker }}/"
-                                              style="color:#FB667A;">LSTM</a></td>
-            <td style="text-align:center;"><a href="/aitrader/trade_stock_svm/{{ tickerObj.ticker }}/"
-                                              style="color:#FB667A;">SVM</a></td>
-            <td style="text-align:center;"><a href="/aitrader/trade_stock_arima/{{ tickerObj.ticker }}/"
-                                              style="color:#FB667A;">ARIMA</a></td>
-            <td style="text-align:center;"><a href="/aitrader/trade_stock_integration/{{ tickerObj.ticker }}/"
-                                              style="color:#FB667A;">Integration</a></td>
-            <td>{{ tickerObj.latest_date }}</td>
-        </tr>
+    <tr>
+        <td>{{ tickerObj.ticker }}</td>
+        <td>{{ tickerObj.longName }}</td>
+        {% if tickerObj.lstm %}
+        <td style="text-align:center;"><a href="/aitrader/trade_stock_lstm/{{ tickerObj.ticker }}/"
+                                          style="color:#FB667A;">LSTM</a></td>
+        {% else %}
+        <td style="text-align:center;">LSTM</td>
+        {% endif %}
+        {% if tickerObj.svm %}
+        <td style="text-align:center;"><a href="/aitrader/trade_stock_svm/{{ tickerObj.ticker }}/"
+                                          style="color:#FB667A;">SVM</a></td>
+        {% else %}
+        <td style="text-align:center;">SVM</td>
+        {% endif %}
+        {% if tickerObj.arima %}
+        <td style="text-align:center;"><a href="/aitrader/trade_stock_arima/{{ tickerObj.ticker }}/"
+                                          style="color:#FB667A;">ARIMA</a></td>
+        {% else %}
+        <td style="text-align:center;">ARIMA</td>
+        {% endif %}
+        {% if tickerObj.lstm and tickerObj.svm and tickerObj.arima %}
+        <td style="text-align:center;"><a href="/aitrader/trade_stock_integration/{{ tickerObj.ticker }}/"
+                                          style="color:#FB667A;">Integration</a></td>
+        {% else %}
+        <td style="text-align:center;">Integration</td>
+        {% endif %}
+        <td>{{ tickerObj.latest_date }}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>

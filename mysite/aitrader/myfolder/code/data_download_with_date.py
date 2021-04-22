@@ -1,11 +1,12 @@
 from yahoo_fin.stock_info import get_data
 
-root_path = "./aitrader/myfolder/"
 
+def data_download_with_date(stock_id, model, invoke_from_http=True):
+    root_path = "./aitrader/myfolder/"
 
-# root_path = "../"
+    if not invoke_from_http:
+        root_path = "../mysite/aitrader/myfolder/"
 
-def data_download_with_date(stock_id, model):
     ticker = stock_id
     # ticker = '600519.SS'
     stock = get_data(ticker, start_date=None, end_date=None,

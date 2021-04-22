@@ -1,10 +1,10 @@
 # coding:utf-8
 import csv
 
-root_path = "./aitrader/myfolder/arima/"
-
 
 def maxProfit(stockcode, balance):
+    root_path = "./aitrader/myfolder/arima/"
+
     prediction_result = root_path + str(
         stockcode) + '//solution//prediction_result.txt'
     f = open(prediction_result, encoding="utf-8")

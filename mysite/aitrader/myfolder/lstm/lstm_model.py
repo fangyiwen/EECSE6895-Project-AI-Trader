@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib
+
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 # import tensorflow as tf
@@ -11,11 +12,15 @@ import math
 import os
 import json
 
-root_path = "./aitrader/myfolder/lstm/"
-# number_of_iterations = 200
-number_of_iterations = 5
 
-def run_lstm_model(stockcode):
+def run_lstm_model(stockcode, invoke_from_http=True):
+    root_path = "./aitrader/myfolder/lstm/"
+    # number_of_iterations = 200
+    number_of_iterations = 5
+
+    if not invoke_from_http:
+        root_path = "../mysite/aitrader/myfolder/lstm/"
+
     def LSTMtest(data):
         tf.reset_default_graph()  # clear the computation graph
         n1 = data.shape[1] - 1  # because the last column is label
@@ -180,11 +185,13 @@ def run_lstm_model(stockcode):
                     print("Number of iterations:", i, " loss:", loss_)
                     theloss.append(loss_)
 
-                isExists = os.path.exists(root_path + str(stockcode) + "//model//" + time)
+                isExists = os.path.exists(
+                    root_path + str(stockcode) + "/model/" + time)
                 if not isExists:
-                    os.makedirs(root_path + str(stockcode) + "//model//" + time)
+                    os.makedirs(root_path + str(stockcode) + "/model/" + time)
 
-                modelpath = root_path + str(stockcode) + "//model//" + time + "//model.ckpt"
+                modelpath = root_path + str(
+                    stockcode) + "/model/" + time + "/model.ckpt"
                 print("model_save: ", saver.save(sess, modelpath))
                 print("The train has finished")
             return theloss
@@ -200,7 +207,8 @@ def run_lstm_model(stockcode):
             with tf.variable_scope("sec_lstm", reuse=tf.AUTO_REUSE):
                 pred, state_ = lstm(X)
             saver = tf.train.Saver(tf.global_variables())
-            modelpath = root_path + str(stockcode) + "//model//" + time + "//model.ckpt"
+            modelpath = root_path + str(
+                stockcode) + "/model/" + time + "/model.ckpt"
             with tf.Session() as sess:
                 saver = tf.train.import_meta_graph(modelpath + '.meta')
                 saver.restore(sess, modelpath)
@@ -242,25 +250,28 @@ def run_lstm_model(stockcode):
                 plt.title(time + ': ' + 'predict-----blue,real-----red',
                           fontsize=10)
 
-                isExists = os.path.exists(root_path + str(stockcode) + "//figure")
+                isExists = os.path.exists(
+                    root_path + str(stockcode) + "/figure")
                 if not isExists:
-                    os.makedirs(root_path + str(stockcode) + "//figure")
-                figurepath = root_path + str(stockcode) + "//figure//" + time + ".jpg"
+                    os.makedirs(root_path + str(stockcode) + "/figure")
+                figurepath = root_path + str(
+                    stockcode) + "/figure/" + time + ".jpg"
 
                 plt.savefig(figurepath)
                 plt.show()
 
                 # Save datapoint
                 isExists = os.path.exists(
-                    root_path + str(stockcode) + "//datapoint")
+                    root_path + str(stockcode) + "/datapoint")
                 if not isExists:
-                    os.makedirs(root_path + str(stockcode) + "//datapoint")
+                    os.makedirs(root_path + str(stockcode) + "/datapoint")
                 time_path = root_path + str(
-                    stockcode) + "//datapoint//" + time + ".json"
+                    stockcode) + "/datapoint/" + time + ".json"
                 loss_path = root_path + str(
-                    stockcode) + "//datapoint//" + 'loss' + ".json"
+                    stockcode) + "/datapoint/" + 'loss' + ".json"
 
-                jsObj = json.dumps({'test_predict': test_predict.tolist(), 'test_y': test_y[:-day].tolist()})
+                jsObj = json.dumps({'test_predict': test_predict.tolist(),
+                                    'test_y': test_y[:-day].tolist()})
                 fileObject = open(time_path, 'w')
                 fileObject.write(jsObj)
                 fileObject.close()
@@ -302,33 +313,34 @@ def run_lstm_model(stockcode):
     plt.xlabel('days', fontsize=14)
     plt.ylabel('close value', fontsize=14)
     plt.title('future 5 days', fontsize=16)
-    figurepath_5days = root_path + str(stockcode) + "//figure//future5days.jpg"
+    figurepath_5days = root_path + str(stockcode) + "/figure/future5days.jpg"
     plt.savefig(figurepath_5days)
     plt.show()
 
     # Save datapoint
     isExists = os.path.exists(
-        root_path + str(stockcode) + "//datapoint")
+        root_path + str(stockcode) + "/datapoint")
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + "//datapoint")
+        os.makedirs(root_path + str(stockcode) + "/datapoint")
     future5days_path = root_path + str(
-        stockcode) + "//datapoint//" + 'future5days' + ".json"
+        stockcode) + "/datapoint/" + 'future5days' + ".json"
 
     jsObj = json.dumps([float(x) for x in prediction_result])
     fileObject = open(future5days_path, 'w')
     fileObject.write(jsObj)
     fileObject.close()
 
-    isExists = os.path.exists(root_path + str(stockcode) + '//solution')
+    isExists = os.path.exists(root_path + str(stockcode) + '/solution')
     if not isExists:
-        os.makedirs(root_path + str(stockcode) + '//solution')
-    with open(root_path + str(stockcode) + '//solution//prediction_result.txt', 'w') as f:
+        os.makedirs(root_path + str(stockcode) + '/solution')
+    with open(root_path + str(stockcode) + '/solution/prediction_result.txt',
+              'w') as f:
         for item in prediction_result:
             f.write(str(item) + "\t")
 
-        if prediction_result[0] > original['close'][len(original)-1]:
+        if prediction_result[0] > original['close'][len(original) - 1]:
             f.write("\n" + "1")
         elif prediction_result[0] == original['close'][len(original) - 1]:
             f.write("\n" + "0")
-        elif prediction_result[0] < original['close'][len(original)-1]:
+        elif prediction_result[0] < original['close'][len(original) - 1]:
             f.write("\n" + "-1")
