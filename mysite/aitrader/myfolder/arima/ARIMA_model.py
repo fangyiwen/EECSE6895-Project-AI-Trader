@@ -1,8 +1,5 @@
 import pandas as pd
-# import pandas_datareader
-# import fix_yahoo_finance as yf
 import matplotlib.pyplot as plt
-import datetime
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
 import numpy as np

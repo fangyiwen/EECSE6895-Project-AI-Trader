@@ -26,6 +26,3 @@ def data_download(stock_id, model, invoke_from_http=True):
     f = open(root_path + model + '/' + ticker + "_latest_date.txt", "w")
     f.write(latest_date)
     f.close()
-
-
-data_download('600519.SS', 'lstm', False)

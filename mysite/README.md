@@ -27,6 +27,7 @@ pip install -r requirements.txt
 ## Run .py locally, not from HTTP
 ```
 conda activate my-django
+conda install pywin32
 python Auto_update.py
 python Batch_train.py
 ```

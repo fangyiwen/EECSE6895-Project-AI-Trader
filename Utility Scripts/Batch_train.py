@@ -3,6 +3,8 @@ import datetime
 import time
 import os
 import sys
+from multiprocessing import Process
+import multiprocessing
 
 sys.path.append(os.path.abspath('../mysite/aitrader/myfolder/code'))
 sys.path.append(os.path.abspath('../mysite/aitrader/myfolder'))
@@ -13,11 +15,23 @@ from svm.SVM_model import train_SVM_model
 from arima.ARIMA_model import train_ARIMA_model
 
 
+def train_helper(ticker, model):
+    if model == 'lstm':
+        data_download(ticker, model, invoke_from_http=False)
+        run_lstm_model(ticker[:-3], invoke_from_http=False)
+    elif model == 'svm':
+        data_download(ticker, model, invoke_from_http=False)
+        train_SVM_model(ticker[:-3], invoke_from_http=False)
+    elif model == 'arima':
+        data_download_with_date(ticker, model, invoke_from_http=False)
+        train_ARIMA_model(ticker[:-3], invoke_from_http=False)
+
+
 def auto_update():
     print(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
 
     start = time.time()
-    threads_list = []
+    process_list = []
 
     # ticker_list = ['600519.SS', '601398.SS', '601318.SS', '601939.SS',
     #                '600036.SS', '000858.SS', '601288.SS', '601988.SS',
@@ -51,31 +65,20 @@ def auto_update():
 
     # add_stock_list = ['600276.SS', '600028.SS']
 
-    def train_helper(ticker, model):
-        if model == 'lstm':
-            data_download(ticker, model, invoke_from_http=False)
-            run_lstm_model(ticker[:-3], invoke_from_http=False)
-        elif model == 'svm':
-            data_download(ticker, model, invoke_from_http=False)
-            train_SVM_model(ticker[:-3], invoke_from_http=False)
-        elif model == 'arima':
-            data_download_with_date(ticker, model, invoke_from_http=False)
-            train_ARIMA_model(ticker[:-3], invoke_from_http=False)
-
     for ticker in ticker_list:
-        th = threading.Thread(target=train_helper, args=(ticker, 'lstm'))
-        th.start()
-        th2 = threading.Thread(target=train_helper, args=(ticker, 'svm'))
-        th2.start()
-        th3 = threading.Thread(target=train_helper, args=(ticker, 'arima'))
-        th3.start()
-        threads_list.append(th)
-        threads_list.append(th2)
-        threads_list.append(th3)
+        p = Process(target=train_helper, args=(ticker, 'lstm'))
+        p.start()
+        process_list.append(p)
+        p = Process(target=train_helper, args=(ticker, 'svm'))
+        p.start()
+        process_list.append(p)
+        p = Process(target=train_helper, args=(ticker, 'arima'))
+        p.start()
+        process_list.append(p)
         print("Training " + ticker + ": LSTM, SVM, ARIMA")
 
-    for t in threads_list:
-        t.join()
+    for p in process_list:
+        p.join()
 
     end = time.time()
     print('Start:', start)
@@ -83,4 +86,6 @@ def auto_update():
     print('Running time:', end - start)
 
 
-auto_update()
+if __name__ == '__main__':
+    print("Number of processors: ", multiprocessing.cpu_count())
+    auto_update()
