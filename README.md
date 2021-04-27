@@ -8,7 +8,7 @@ The financial market is one of the first to adopt machine learning. Since the 19
 Yiwen Fang (yf2560) | Guoshiwen Han (gh2567)
 
 ## System Overview
-![System Overview](Utility Scripts/system_overview.jpg)
+![System Overview](Utility%20Scripts/system_overview.jpg)
 
 ## Environment Setup
 The command is for local machine. The environment setup for AWS EC2 can be done in a similar way by using ```python3-venv```.
