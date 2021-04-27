@@ -18,7 +18,7 @@ The command is for local machine. The environment setup for AWS EC2 can be done 
 - Upgrade/replace the API key at stockdio.com if the real-time market info fails to show.
 - Install Python with the version 3.8.8
 - Make a conda virtual environment
-    - conda activate my-django
+    - ```conda activate my-django```
 - Install required dependencies (manual way)
     - ```pip install Django==3.1.7```
     - ```pip install yahoo-fin```
