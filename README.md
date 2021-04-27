@@ -1,4 +1,4 @@
-# EECSE6895 Project: A-share Stock Auto Trader
+# EECSE6895 Project: A-share Stock AI Trader
 B9: Investment Strategy - AI Trader (CN/HK/TW/JP)
 
 ## Introduction
