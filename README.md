@@ -4,6 +4,8 @@ B9: Investment Strategy - AI Trader (CN/HK/TW/JP)
 ## Introduction
 The financial market is one of the first to adopt machine learning. Since the 1980s, people have been using machine learning to discover the laws of the financial market. Although machine learning has achieved great success in forecasting in other fields, the stock market is a market where everyone can invest in profit, but machine learning forecasts have not achieved significant results. As stock traders, we want to simulate stock prices or its trend correctly so that we can reasonably decide when to buy stocks and when to sell stocks in order to achieve maximum profitability. In this project, we will deploy LSTM, SVM, ARIMA methods to train models, then predict stock values or its trends. According to the result, we will design an algorithm to buy it at a low price, sell it at a high price, to achieve profits as much as possible. Finally, we will build a web application visualizing the result, which makes it more intuitive and easier to use and to accept for users.
 
+Visit the deployed website at http://ec2-34-207-212-22.compute-1.amazonaws.com/aitrader/
+
 ## Team
 Yiwen Fang (yf2560) | Guoshiwen Han (gh2567)
 
