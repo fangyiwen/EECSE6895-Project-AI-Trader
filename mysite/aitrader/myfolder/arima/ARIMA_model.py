@@ -74,7 +74,8 @@ def train_ARIMA_model(stockcode, invoke_from_http=True):
         for item in str(predict_data[0])[1:-1].replace("  ", " ").split(" "):
             print(item)
             f.write(item + "\t")
-            prediction_result.append(float(item))
+            if item.strip() != '':
+                prediction_result.append(float(item))
 
         if prediction_result[0] > StockDate['close'][-1]:
             f.write("\n" + "1")

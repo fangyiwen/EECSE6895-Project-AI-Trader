@@ -4,7 +4,6 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 import time
 import os
 import sys
-from multiprocessing import Process
 import multiprocessing
 
 sys.path.append(os.path.abspath('../mysite/aitrader/myfolder/code'))
@@ -32,52 +31,48 @@ def train_helper(ticker, model):
 
 # pip install APScheduler
 
-def auto_update():
-    print(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
-
-    start = time.time()
-    process_list = []
-
-    root_url = "http://127.0.0.1:8000/aitrader"
-
-    URL = root_url + "/" + "stock_all/"
-    r = requests.get(url=URL)
-    data = r.json()
-    ticker_list = data["ticker_list"]
-
-    for ticker in ticker_list:
-        p = Process(target=train_helper, args=(ticker, 'lstm'))
-        p.start()
-        process_list.append(p)
-        p = Process(target=train_helper, args=(ticker, 'svm'))
-        p.start()
-        process_list.append(p)
-        p = Process(target=train_helper, args=(ticker, 'arima'))
-        p.start()
-        process_list.append(p)
-        print("Training " + ticker + ": LSTM, SVM, ARIMA")
-
-    for p in process_list:
-        p.join()
-
-    end = time.time()
-    print('Start:', start)
-    print('End:', end)
-    print('Running time:', end - start)
-
-
-# Auto schedule
-# scheduler = BlockingScheduler()
-# scheduler.add_job(
-#     auto_update,
-#     trigger='cron',
-#     second=0,
-#     minute=30,
-#     hour=15,
-#     timezone="Asia/Shanghai"
-# )
-# scheduler.start()
-
 if __name__ == '__main__':
-    print("Number of processors: ", multiprocessing.cpu_count())
-    auto_update()
+    def auto_update():
+        print("Number of processors: ", multiprocessing.cpu_count())
+        print(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
+
+        start = time.time()
+
+        root_url = "http://127.0.0.1:8000/aitrader"
+
+        URL = root_url + "/" + "stock_all/"
+        r = requests.get(url=URL)
+        data = r.json()
+        ticker_list = data["ticker_list"]
+
+        # pool = multiprocessing.Pool(processes=6)
+        pool = multiprocessing.Pool()
+
+        for ticker in ticker_list:
+            pool.apply_async(train_helper, (ticker, 'lstm'))
+            pool.apply_async(train_helper, (ticker, 'svm'))
+            pool.apply_async(train_helper, (ticker, 'arima'))
+            print("Training " + ticker + ": LSTM, SVM, ARIMA")
+
+        pool.close()
+        pool.join()
+
+        end = time.time()
+        print('Start:', start)
+        print('End:', end)
+        print('Running time:', end - start)
+
+
+    # Auto schedule
+    scheduler = BlockingScheduler()
+    scheduler.add_job(
+        auto_update,
+        trigger='cron',
+        second=0,
+        minute=30,
+        hour=15,
+        timezone="Asia/Shanghai"
+    )
+    scheduler.start()
+
+    # auto_update()

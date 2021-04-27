@@ -14,8 +14,8 @@ import json
 
 def run_lstm_model(stockcode, invoke_from_http=True):
     root_path = "./aitrader/myfolder/lstm/"
-    # number_of_iterations = 200
-    number_of_iterations = 5
+    number_of_iterations = 200
+    # number_of_iterations = 5
 
     if not invoke_from_http:
         root_path = "../mysite/aitrader/myfolder/lstm/"
@@ -87,15 +87,17 @@ def run_lstm_model(stockcode, invoke_from_http=True):
             test_size = (len(normalized_test_data) + time_step - 1) // time_step
             print('test_size', test_size)
             test_x, test_y = [], []
+
+            j = test_size - 2
             for i in range(test_size - 1):
                 x = normalized_test_data[i * time_step:(i + 1) * time_step, :n1]
                 y = normalized_test_data[i * time_step:(i + 1) * time_step, n1]
                 test_x.append(x.tolist())
                 test_y.extend(y)
             test_x.append(
-                (normalized_test_data[(i + 1) * time_step:, :n1]).tolist())
+                (normalized_test_data[(j + 1) * time_step:, :n1]).tolist())
             test_y.extend(
-                (normalized_test_data[(i + 1) * time_step:, n1]).tolist())
+                (normalized_test_data[(j + 1) * time_step:, n1]).tolist())
             return mean, std, test_x, test_y
 
         # ——————————————————Define neural network variables——————————————————
@@ -175,6 +177,7 @@ def run_lstm_model(stockcode, invoke_from_http=True):
                 theloss = []
                 # Number of iterations
                 for i in range(number_of_iterations):
+                    loss_ = 0
                     for step in range(len(batch_index) - 1):
                         # sess.run(b, feed_dict = replace_dict)
                         state_, loss_ = sess.run([train_op, loss], feed_dict={
