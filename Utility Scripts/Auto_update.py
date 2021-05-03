@@ -46,7 +46,7 @@ if __name__ == '__main__':
         ticker_list = data["ticker_list"]
 
         # pool = multiprocessing.Pool(processes=6)
-        pool = multiprocessing.Pool()
+        pool = multiprocessing.Pool(3)
 
         for ticker in ticker_list:
             pool.apply_async(train_helper, (ticker, 'lstm'))
@@ -64,15 +64,15 @@ if __name__ == '__main__':
 
 
     # Auto schedule
-    scheduler = BlockingScheduler()
-    scheduler.add_job(
-        auto_update,
-        trigger='cron',
-        second=0,
-        minute=30,
-        hour=15,
-        timezone="Asia/Shanghai"
-    )
-    scheduler.start()
+    # scheduler = BlockingScheduler()
+    # scheduler.add_job(
+    #     auto_update,
+    #     trigger='cron',
+    #     second=0,
+    #     minute=30,
+    #     hour=15,
+    #     timezone="Asia/Shanghai"
+    # )
+    # scheduler.start()
 
-    # auto_update()
+    auto_update()

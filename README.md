@@ -10,7 +10,7 @@ Visit the deployed website at http://ec2-34-207-212-22.compute-1.amazonaws.com/a
 Yiwen Fang (yf2560) | Guoshiwen Han (gh2567)
 
 ## System Overview
-![System Overview](Utility%20Scripts/system_overview.jpg)
+![System Overview](doc/system_overview.jpg)
 
 ## Environment Setup
 The command is for local machine. The environment setup for AWS EC2 can be done in a similar way by using ```python3-venv```.
